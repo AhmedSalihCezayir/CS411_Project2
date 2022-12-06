@@ -158,7 +158,10 @@ const ChatRoom = () => {
 					</div>
 					{tab === 'CHATROOM' && (
 						<div className='chat-content'>
-							<ul className='chat-messages'>
+							<ul
+								className='chat-messages'
+								style={{ overflowY: 'scroll' }}
+							>
 								{publicChats.map((chat, index) => (
 									<li
 										className={`message ${
