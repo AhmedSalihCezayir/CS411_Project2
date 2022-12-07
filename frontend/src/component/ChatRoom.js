@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import Grid from '@mui/material/Grid';
+import AddFriendsDialog from './AddFriendsDialog';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 var stompClient = null;
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
+
 const ChatRoom = () => {
 	// Each key hold username, each value hold list of messages
 	// which are sent by particular user
@@ -16,6 +30,13 @@ const ChatRoom = () => {
 		connected: false,
 		message: '',
 	});
+	const [addFriendsDialogOpen, setAddFriendsDialogOpen] = useState(false);
+	const [showAddFriendAlert, setShowAddFriendAlert] = useState(false);
+	const [alert, setAlert] = useState({
+		message: '',
+		color: '',
+	});
+
 	useEffect(() => {
 		console.log(userData);
 	}, [userData]);
@@ -125,11 +146,95 @@ const ChatRoom = () => {
 	const registerUser = () => {
 		connect();
 	};
+
+	// These are for vertical dots menu
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const openFriendDialog = () => {
+		setAnchorEl(false);
+		setAddFriendsDialogOpen(true);
+	};
+
+	const closeFriendDialog = () => {
+		setAddFriendsDialogOpen(false);
+	};
+
+	const handleAlert = (alert) => {
+		setAlert({ message: alert.message, color: alert.color });
+		setShowAddFriendAlert(true);
+	};
+
+	const handleCloseAlert = () => {
+		setShowAddFriendAlert(false);
+	};
+
 	return (
 		<div className='container'>
 			{userData.connected ? (
 				<div className='chat-box'>
 					<div className='member-list'>
+						<Grid container justifyContent='flex-end'>
+							<IconButton>
+								<AccountCircleIcon />
+							</IconButton>
+							<IconButton
+								aria-controls={
+									open ? 'demo-positioned-menu' : undefined
+								}
+								aria-haspopup='true'
+								aria-expanded={open ? 'true' : undefined}
+								onClick={handleClick}
+							>
+								<MoreVertIcon />
+							</IconButton>
+							<Menu
+								anchorEl={anchorEl}
+								open={open}
+								onClose={handleClose}
+							>
+								<MenuItem onClick={handleClose}>
+									Create Group
+								</MenuItem>
+								<MenuItem onClick={openFriendDialog}>
+									Add Friend
+								</MenuItem>
+								<MenuItem onClick={handleClose}>
+									Logout
+								</MenuItem>
+							</Menu>
+						</Grid>
+
+						<AddFriendsDialog
+							open={addFriendsDialogOpen}
+							onClose={closeFriendDialog}
+							handleAlert={handleAlert}
+						/>
+
+						<Snackbar
+							open={showAddFriendAlert}
+							autoHideDuration={4000}
+							onClose={handleCloseAlert}
+							anchorOrigin={{
+								vertical: 'top',
+								horizontal: 'center',
+							}}
+						>
+							<Alert
+								onClose={handleCloseAlert}
+								severity={alert.color}
+								sx={{ width: '100%' }}
+							>
+								{alert.message}
+							</Alert>
+						</Snackbar>
+
 						<ul>
 							<li
 								onClick={() => {
