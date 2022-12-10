@@ -11,11 +11,12 @@ import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CreateGroupDialog from './CreateGroupDialog';
-import { Typography, Button, Input, Box, ListItem, ListItemButton, List, TextField } from '@mui/material';
+import { Typography, Button, Input, Box, ListItem, ListItemButton, List, TextField, Chip } from '@mui/material';
 import Register from './Register';
 import Logo from "../icons/logo.png";
 
 var stompClient = null;
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -339,9 +340,7 @@ const ChatRoom = () => {
 									>
 										{chat.senderName !==
 											userData.username && (
-											<div className='avatar'>
-												{chat.senderName}
-											</div>
+											<Chip color="secondary" label={chat.senderName}/>
 										)}
 										<div className="message-date">
 											<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
@@ -351,9 +350,7 @@ const ChatRoom = () => {
 										</div>
 										{chat.senderName ===
 											userData.username && (
-											<div className='avatar self'>
-												{chat.senderName}
-											</div>
+											<Chip color="primary" label={chat.senderName}/>
 										)}
 									</li>
 								))}
@@ -389,9 +386,7 @@ const ChatRoom = () => {
 										>
 											{chat.senderName !==
 												userData.username && (
-												<div className='avatar'>
-													{chat.senderName}
-												</div>
+												<Chip color="secondary" label={chat.senderName}/>
 											)}
 											<div className="message-date">
 												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
@@ -401,9 +396,7 @@ const ChatRoom = () => {
 											</div>
 											{chat.senderName ===
 												userData.username && (
-												<div className='avatar self'>
-													{chat.senderName}
-												</div>
+												<Chip color="primary" label={chat.senderName}/>
 											)}
 										</li>
 									)
