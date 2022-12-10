@@ -100,16 +100,6 @@ ul {
   color:#fff;
 }
 
-.avatar{
-  background-color: cornflowerblue;
-  padding: 3px 5px;
-  border-radius: 5px;
-  color:#fff;
-}
-.avatar.self{
-  color:#000;
-  background-color: greenyellow;
-}
 .message{
   padding:5px;
   width: auto;
