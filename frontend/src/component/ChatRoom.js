@@ -248,6 +248,7 @@ const ChatRoom = () => {
 							open={addFriendsDialogOpen}
 							onClose={closeFriendDialog}
 							handleAlert={handleAlert}
+							currentUser={userData.username}
 						/>
 
 						<Snackbar

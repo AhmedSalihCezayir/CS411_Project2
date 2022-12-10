@@ -10,12 +10,14 @@ import AddIcon from '@mui/icons-material/Add';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
 
 const AddFriendsDialog = (props) => {
-	const { onClose, open, handleAlert } = {
+	const { onClose, open, handleAlert, currentUser } = {
 		onClose: props.onClose,
 		open: props.open,
 		handleAlert: props.handleAlert,
+		currentUser: props.currentUser,
 	};
 
 	const [username, setUsername] = useState('');
@@ -31,7 +33,16 @@ const AddFriendsDialog = (props) => {
 	};
 
 	const handleAddFriend = () => {
-		const success = true; // TODO This will be connected to backend
+		let success;
+		axios
+			.post(`https://localhost:8080/chat/add_friend`, {
+				user1: currentUser,
+				user2: username,
+			})
+			.then((res) => {
+				success = res.data;
+			});
+
 		let message;
 		let color;
 
