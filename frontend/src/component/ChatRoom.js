@@ -11,6 +11,8 @@ import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CreateGroupDialog from './CreateGroupDialog';
+import { Typography } from '@mui/material';
+import Register from './Register';
 
 var stompClient = null;
 
@@ -30,6 +32,7 @@ const ChatRoom = () => {
 		receivername: '',
 		connected: false,
 		message: '',
+		messageDate: "",
 	});
 	const [addFriendsDialogOpen, setAddFriendsDialogOpen] = useState(false);
 	const [showAddFriendAlert, setShowAddFriendAlert] = useState(false);
@@ -110,18 +113,23 @@ const ChatRoom = () => {
 
 	const handleMessage = (event) => {
 		const { value } = event.target;
-		setUserData({ ...userData, message: value });
+		const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","August","Sep","Oct","Nov","Dec"];
+		var today = new Date()
+		const date = month[today.getMonth()] + '.' + today.getDate() + " " + today.getHours() + ":" + today.getMinutes();
+		setUserData({ ...userData, message: value, messageDate: date });
 	};
+    
 	const sendValue = () => {
 		if (stompClient) {
 			var chatMessage = {
 				senderName: userData.username,
 				message: userData.message,
+				date: userData.messageDate,
 				status: 'MESSAGE',
 			};
 			console.log(chatMessage);
 			stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
-			setUserData({ ...userData, message: '' });
+			setUserData({ ...userData, message: '', messageDate: '' });
 		}
 	};
 
@@ -131,6 +139,7 @@ const ChatRoom = () => {
 				senderName: userData.username,
 				receiverName: tab,
 				message: userData.message,
+				date: userData.messageDate,
 				status: 'MESSAGE',
 			};
 
@@ -143,7 +152,7 @@ const ChatRoom = () => {
 				{},
 				JSON.stringify(chatMessage)
 			);
-			setUserData({ ...userData, message: '' });
+			setUserData({ ...userData, message: '', messageDate: '' });
 		}
 	};
 
@@ -330,6 +339,9 @@ const ChatRoom = () => {
 												{chat.senderName}
 											</div>
 										)}
+										<div className="message-date">
+											<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+										</div>
 										<div className='message-data'>
 											{chat.message}
 										</div>
