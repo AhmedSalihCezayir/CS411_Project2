@@ -13,6 +13,7 @@ import MuiAlert from '@mui/material/Alert';
 import CreateGroupDialog from './CreateGroupDialog';
 import { Typography, Button, Input, Box, ListItem, ListItemButton, List } from '@mui/material';
 import Register from './Register';
+import Logo from "../icons/logo.png";
 
 var stompClient = null;
 
@@ -208,7 +209,16 @@ const ChatRoom = () => {
 		setShowCreateGroupAlert(true);
 	};
 
+	const logoSize = {
+		width: 240,
+		height: 170,
+	}
+
 	return (
+		<div className='container'>
+			<Box display="flex" justifyContent="center" alignItems="center" margin="auto">
+				<img src={Logo} alt="Logo" style={logoSize}/>
+			</Box>
 		<div className='container'>
 			{userData.connected ? (
 				<div className='chat-box'>
@@ -428,6 +438,7 @@ const ChatRoom = () => {
 					</button>
 				</div>
 			)}
+		</div>
 		</div>
 	);
 };
