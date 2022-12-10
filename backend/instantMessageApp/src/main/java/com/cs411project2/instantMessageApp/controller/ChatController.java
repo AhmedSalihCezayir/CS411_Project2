@@ -1,6 +1,6 @@
 package com.cs411project2.instantMessageApp.controller;
 
-import com.cs411project2.instantMessageApp.model.AddFriendRequest;
+import com.cs411project2.instantMessageApp.request.AddFriendRequest;
 import com.cs411project2.instantMessageApp.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,9 +9,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RestController
@@ -41,6 +41,11 @@ public class ChatController {
        return addFriendSql(addFriendRequest);
     }
 
+    @GetMapping("all_friends/{user}")
+    public List<String> getAllFriends(@PathVariable String user){
+        return
+    }
+
     public boolean addFriendSql(AddFriendRequest addFriendRequest) {
         String sql = "INSERT INTO friend (user1, user2) VALUES (?, ?)";
 
@@ -51,6 +56,21 @@ public class ChatController {
             return false;
         }
     }
+    /*
+
+    public List<String> getAllFriendSQL(String user){
+        String sql = "Select friend.user2 from friend where friend.user1=(?)";
+
+        try {
+            jdbcTemplate.(sql, addFriendRequest.getUser1(), addFriendRequest.getUser2());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+     */
+
 
 
 }

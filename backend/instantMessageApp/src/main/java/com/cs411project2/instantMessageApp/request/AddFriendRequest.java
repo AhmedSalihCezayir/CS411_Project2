@@ -1,4 +1,4 @@
-package com.cs411project2.instantMessageApp.model;
+package com.cs411project2.instantMessageApp.request;
 
 import lombok.*;
 
