@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import CreateGroupDialog from './CreateGroupDialog';
 
 var stompClient = null;
 
@@ -36,6 +37,14 @@ const ChatRoom = () => {
 		message: '',
 		color: '',
 	});
+	const [friendsList, setFriendsList] = useState([
+		'Ahmed Salih Cezayir',
+		'İsmail Sergen Göçmen',
+		'Akın Kutlu',
+		'Mert Barkın Er',
+	]);
+	const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
+	const [showCreateGroupAlert, setShowCreateGroupAlert] = useState(false);
 
 	useEffect(() => {
 		console.log(userData);
@@ -173,6 +182,21 @@ const ChatRoom = () => {
 
 	const handleCloseAlert = () => {
 		setShowAddFriendAlert(false);
+		setShowCreateGroupAlert(false);
+	};
+
+	const openCreateGroupDialog = () => {
+		setAnchorEl(false);
+		setCreateGroupDialogOpen(true);
+	};
+
+	const closeCreateGroupDialog = () => {
+		setCreateGroupDialogOpen(false);
+	};
+
+	const handleGroupAlert = (alert) => {
+		setAlert({ message: alert.message, color: alert.color });
+		setShowCreateGroupAlert(true);
 	};
 
 	return (
@@ -199,7 +223,7 @@ const ChatRoom = () => {
 								open={open}
 								onClose={handleClose}
 							>
-								<MenuItem onClick={handleClose}>
+								<MenuItem onClick={openCreateGroupDialog}>
 									Create Group
 								</MenuItem>
 								<MenuItem onClick={openFriendDialog}>
@@ -219,6 +243,31 @@ const ChatRoom = () => {
 
 						<Snackbar
 							open={showAddFriendAlert}
+							autoHideDuration={4000}
+							onClose={handleCloseAlert}
+							anchorOrigin={{
+								vertical: 'top',
+								horizontal: 'center',
+							}}
+						>
+							<Alert
+								onClose={handleCloseAlert}
+								severity={alert.color}
+								sx={{ width: '100%' }}
+							>
+								{alert.message}
+							</Alert>
+						</Snackbar>
+
+						<CreateGroupDialog
+							open={createGroupDialogOpen}
+							friendsList={friendsList}
+							onClose={closeCreateGroupDialog}
+							handleAlert={handleGroupAlert}
+						/>
+
+						<Snackbar
+							open={showCreateGroupAlert}
 							autoHideDuration={4000}
 							onClose={handleCloseAlert}
 							anchorOrigin={{
