@@ -394,6 +394,9 @@ const ChatRoom = () => {
 													{chat.senderName}
 												</div>
 											)}
+											<div className="message-date">
+												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+											</div>
 											<div className='message-data'>
 												{chat.message}
 											</div>
