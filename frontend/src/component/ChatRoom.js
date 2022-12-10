@@ -11,7 +11,7 @@ import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CreateGroupDialog from './CreateGroupDialog';
-import { Typography, Button, Input, Box, ListItem, ListItemButton, List } from '@mui/material';
+import { Typography, Button, Input, Box, ListItem, ListItemButton, List, TextField } from '@mui/material';
 import Register from './Register';
 import Logo from "../icons/logo.png";
 
@@ -216,10 +216,10 @@ const ChatRoom = () => {
 
 	return (
 		<div className='container'>
-			<Box display="flex" justifyContent="center" alignItems="center" margin="auto">
+			<Box display="flex" justifyContent="center" margin="auto">
 				<img src={Logo} alt="Logo" style={logoSize}/>
 			</Box>
-		<div className='container'>
+		<div className='container' justifyContent="center" margin="auto">
 			{userData.connected ? (
 				<div className='chat-box'>
 					<div className='member-list'>
@@ -424,19 +424,12 @@ const ChatRoom = () => {
 					)}
 				</div>
 			) : (
-				<div className='register'>
-					<input
-						id='user-name'
-						placeholder='Enter your name'
-						name='userName'
-						value={userData.username}
-						onChange={handleUsername}
-						margin='normal'
-					/>
-					<button type='button' onClick={registerUser}>
-						connect
-					</button>
-				</div>
+				<Box justifyContent="center" margin="auto">
+          <Box display="flex" flexDirection={"column"} alignItems="center" justifyContent={"center"} margin="auto" marginTop={10}>
+              <TextField margin="normal" id="name" label="Name" variant="standard" name="name" required value={userData.username} onChange={handleUsername}/>
+              <Button sx={{marginTop:4}} variant="contained" onClick={registerUser}> Login </Button> 
+          </Box>
+				</Box>
 			)}
 		</div>
 		</div>
