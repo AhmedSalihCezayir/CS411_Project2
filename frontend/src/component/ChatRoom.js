@@ -303,7 +303,7 @@ const ChatRoom = () => {
 							</Alert>
 						</Snackbar>
 
-						<List >
+						<List style={{display:"flex", flexDirection: "column"}}>
 							<Button
 								onClick={() => {
 									setTab('CHATROOM');
