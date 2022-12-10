@@ -11,10 +11,12 @@ import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CreateGroupDialog from './CreateGroupDialog';
-import { Typography } from '@mui/material';
+import { Typography, Button, Input, Box, ListItem, ListItemButton, List, TextField, Chip } from '@mui/material';
 import Register from './Register';
+import Logo from "../icons/logo.png";
 
 var stompClient = null;
+
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -208,8 +210,17 @@ const ChatRoom = () => {
 		setShowCreateGroupAlert(true);
 	};
 
+	const logoSize = {
+		width: 240,
+		height: 170,
+	}
+
 	return (
 		<div className='container'>
+			<Box display="flex" justifyContent="center" margin="auto">
+				<img src={Logo} alt="Logo" style={logoSize}/>
+			</Box>
+		<div className='container' justifyContent="center" margin="auto">
 			{userData.connected ? (
 				<div className='chat-box'>
 					<div className='member-list'>
@@ -294,31 +305,25 @@ const ChatRoom = () => {
 							</Alert>
 						</Snackbar>
 
-						<ul>
-							<li
+						<List style={{display:"flex", flexDirection: "column"}}>
+							<Button
 								onClick={() => {
 									setTab('CHATROOM');
 								}}
-								className={`member ${
-									tab === 'CHATROOM' && 'active'
-								}`}
 							>
 								Chatroom
-							</li>
+							</Button>
 							{[...privateChats.keys()].map((name, index) => (
-								<li
+								<Button color="secondary"
 									onClick={() => {
 										setTab(name);
 									}}
-									className={`member ${
-										tab === name && 'active'
-									}`}
 									key={index}
 								>
 									{name}
-								</li>
+								</Button>
 							))}
-						</ul>
+						</List>
 					</div>
 					{tab === 'CHATROOM' && (
 						<div className='chat-content'>
@@ -336,9 +341,7 @@ const ChatRoom = () => {
 									>
 										{chat.senderName !==
 											userData.username && (
-											<div className='avatar'>
-												{chat.senderName}
-											</div>
+											<Chip color="secondary" label={chat.senderName}/>
 										)}
 										<div className="message-date">
 											<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
@@ -348,30 +351,23 @@ const ChatRoom = () => {
 										</div>
 										{chat.senderName ===
 											userData.username && (
-											<div className='avatar self'>
-												{chat.senderName}
-											</div>
+											<Chip color="primary" label={chat.senderName}/>
 										)}
 									</li>
 								))}
 							</ul>
 
-							<div className='send-message'>
-								<input
-									type='text'
-									className='input-message'
-									placeholder='enter the message'
-									value={userData.message}
-									onChange={handleMessage}
-								/>
-								<button
+							<Box className='send-message' display="flex" justifyContent="space-between">
+							<Input type='text' placeholder="Enter your Message" value={userData.message} onChange={handleMessage} sx={{width: 8/10 }}/>
+								<Button
 									type='button'
 									className='send-button'
 									onClick={sendValue}
+									variant="contained"
 								>
-									send
-								</button>
-							</div>
+									Send
+								</Button>
+							</Box>
 						</div>
 					)}
 					{tab !== 'CHATROOM' && (
@@ -391,9 +387,7 @@ const ChatRoom = () => {
 										>
 											{chat.senderName !==
 												userData.username && (
-												<div className='avatar'>
-													{chat.senderName}
-												</div>
+												<Chip color="secondary" label={chat.senderName}/>
 											)}
 											<div className="message-date">
 												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
@@ -403,49 +397,35 @@ const ChatRoom = () => {
 											</div>
 											{chat.senderName ===
 												userData.username && (
-												<div className='avatar self'>
-													{chat.senderName}
-												</div>
+												<Chip color="primary" label={chat.senderName}/>
 											)}
 										</li>
 									)
 								)}
 							</ul>
 
-							<div className='send-message'>
-								<input
-									type='text'
-									className='input-message'
-									placeholder='enter the message'
-									value={userData.message}
-									onChange={handleMessage}
-								/>
-								<button
-									type='button'
+							<Box className='send-message' display="flex" justifyContent="space-between">
+								<Input type='text' placeholder="Enter your Message" value={userData.message} onChange={handleMessage} sx={{width: 8/10}}/>
+								<Button
 									className='send-button'
 									onClick={sendPrivateValue}
+									variant="contained"
 								>
-									send
-								</button>
-							</div>
+									Send
+								</Button>
+							</Box>
 						</div>
 					)}
 				</div>
 			) : (
-				<div className='register'>
-					<input
-						id='user-name'
-						placeholder='Enter your name'
-						name='userName'
-						value={userData.username}
-						onChange={handleUsername}
-						margin='normal'
-					/>
-					<button type='button' onClick={registerUser}>
-						connect
-					</button>
-				</div>
+				<Box justifyContent="center" margin="auto">
+          <Box display="flex" flexDirection={"column"} alignItems="center" justifyContent={"center"} margin="auto" marginTop={10}>
+              <TextField margin="normal" id="name" label="Name" variant="standard" name="name" required value={userData.username} onChange={handleUsername}/>
+              <Button sx={{marginTop:4}} variant="contained" onClick={registerUser}> Login </Button> 
+          </Box>
+				</Box>
 			)}
+		</div>
 		</div>
 	);
 };
