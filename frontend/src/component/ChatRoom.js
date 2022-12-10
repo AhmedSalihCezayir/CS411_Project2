@@ -342,13 +342,24 @@ const ChatRoom = () => {
 										{chat.senderName !==
 											userData.username && (
 											<Chip color="secondary" label={chat.senderName}/>
-										)}
-										<div className="message-date">
-											<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
-										</div>
-										<div className='message-data'>
-											{chat.message}
-										</div>
+										)} 
+										{chat.senderName == userData.username ? 
+										<>
+											<div className="message-date">
+												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+											</div>
+											<div className='message-data'>
+												{chat.message}
+											</div>
+											</> : <>
+											<div className='message-data'>
+												{chat.message}
+											</div>
+											<div className="message-date">
+												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+											</div> 
+										</> 
+										}
 										{chat.senderName ===
 											userData.username && (
 											<Chip color="primary" label={chat.senderName}/>
@@ -389,12 +400,23 @@ const ChatRoom = () => {
 												userData.username && (
 												<Chip color="secondary" label={chat.senderName}/>
 											)}
-											<div className="message-date">
-												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
-											</div>
-											<div className='message-data'>
-												{chat.message}
-											</div>
+											{chat.senderName == userData.username ? 
+												<>
+													<div className="message-date">
+														<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+													</div>
+													<div className='message-data'>
+														{chat.message}
+													</div>
+													</> : <>
+													<div className='message-data'>
+														{chat.message}
+													</div>
+													<div className="message-date">
+														<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+													</div> 
+												</> 
+											}
 											{chat.senderName ===
 												userData.username && (
 												<Chip color="primary" label={chat.senderName}/>
