@@ -11,7 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:3000/")
 public abstract class BaseController<D extends BaseDto<UUID>>
 {
 	private final BaseCrudService<D> baseCrudService;
