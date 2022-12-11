@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import List from '@mui/material/List';
@@ -10,16 +10,29 @@ import ListItemButton from '@mui/material/ListItemButton';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { DialogActions } from '@mui/material';
+import axios from 'axios';
 
 const CreateGroupDialog = (props) => {
 	const [selected, setSelected] = useState([]);
 	const [groupName, setGroupName] = useState('');
-	const { onClose, open, handleAlert, friendsList } = {
+	const [friendsList, setFriendsList] = useState([]);
+	const { onClose, open, handleAlert, currentUser } = {
 		onClose: props.onClose,
 		open: props.open,
 		handleAlert: props.handleAlert,
-		friendsList: props.friendsList,
+		currentUser: props.currentUser,
 	};
+
+	useEffect(() => {
+		async function fetchFriends() {
+			const friendsList = await axios.get(
+				`friend/findAll/${currentUser}`
+			);
+			setFriendsList(friendsList);
+		}
+
+		fetchFriends();
+	});
 
 	const handleClose = () => {
 		onClose();
@@ -38,7 +51,23 @@ const CreateGroupDialog = (props) => {
 	};
 
 	const handleCreateGroup = () => {
-		const success = false; // TODO This will be connected to backend
+		let success;
+		const selectedFriends = selected.filter((i) => {
+			return {
+				name: friendsList[i],
+			};
+		});
+
+		axios
+			.post(
+				`https://localhost:8080/groupChat/add/createAll/${groupName}`,
+				selectedFriends
+			)
+			.then((res) => {
+				console.log(res.data);
+				success = true;
+				// success = res.data;
+			});
 		let message;
 		let color;
 

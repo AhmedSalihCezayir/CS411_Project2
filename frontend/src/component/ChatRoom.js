@@ -11,12 +11,21 @@ import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CreateGroupDialog from './CreateGroupDialog';
-import { Typography, Button, Input, Box, ListItem, ListItemButton, List, TextField, Chip } from '@mui/material';
+import {
+	Typography,
+	Button,
+	Input,
+	Box,
+	ListItem,
+	ListItemButton,
+	List,
+	TextField,
+	Chip,
+} from '@mui/material';
 import Register from './Register';
-import Logo from "../icons/logo.png";
+import Logo from '../icons/logo.png';
 
 var stompClient = null;
-
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -34,7 +43,7 @@ const ChatRoom = () => {
 		receivername: '',
 		connected: false,
 		message: '',
-		messageDate: "",
+		messageDate: '',
 	});
 	const [addFriendsDialogOpen, setAddFriendsDialogOpen] = useState(false);
 	const [showAddFriendAlert, setShowAddFriendAlert] = useState(false);
@@ -115,12 +124,32 @@ const ChatRoom = () => {
 
 	const handleMessage = (event) => {
 		const { value } = event.target;
-		const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","August","Sep","Oct","Nov","Dec"];
-		var today = new Date()
-		const date = month[today.getMonth()] + '.' + today.getDate() + " " + today.getHours() + ":" + today.getMinutes();
+		const month = [
+			'Jan',
+			'Feb',
+			'Mar',
+			'Apr',
+			'May',
+			'Jun',
+			'Jul',
+			'August',
+			'Sep',
+			'Oct',
+			'Nov',
+			'Dec',
+		];
+		var today = new Date();
+		const date =
+			month[today.getMonth()] +
+			'.' +
+			today.getDate() +
+			' ' +
+			today.getHours() +
+			':' +
+			today.getMinutes();
 		setUserData({ ...userData, message: value, messageDate: date });
 	};
-    
+
 	const sendValue = () => {
 		if (stompClient) {
 			var chatMessage = {
@@ -213,182 +242,134 @@ const ChatRoom = () => {
 	const logoSize = {
 		width: 240,
 		height: 170,
-	}
+	};
 
 	return (
 		<div className='container'>
-			<Box display="flex" justifyContent="center" margin="auto">
-				<img src={Logo} alt="Logo" style={logoSize}/>
+			<Box display='flex' justifyContent='center' margin='auto'>
+				<img src={Logo} alt='Logo' style={logoSize} />
 			</Box>
-		<div className='container' justifyContent="center" margin="auto">
-			{userData.connected ? (
-				<div className='chat-box'>
-					<div className='member-list'>
-						<Grid container justifyContent='flex-end'>
-							<IconButton>
-								<AccountCircleIcon />
-							</IconButton>
-							<IconButton
-								aria-controls={
-									open ? 'demo-positioned-menu' : undefined
-								}
-								aria-haspopup='true'
-								aria-expanded={open ? 'true' : undefined}
-								onClick={handleClick}
-							>
-								<MoreVertIcon />
-							</IconButton>
-							<Menu
-								anchorEl={anchorEl}
-								open={open}
-								onClose={handleClose}
-							>
-								<MenuItem onClick={openCreateGroupDialog}>
-									Create Group
-								</MenuItem>
-								<MenuItem onClick={openFriendDialog}>
-									Add Friend
-								</MenuItem>
-								<MenuItem onClick={handleClose}>
-									Logout
-								</MenuItem>
-							</Menu>
-						</Grid>
+			<div className='container' justifyContent='center' margin='auto'>
+				{userData.connected ? (
+					<div className='chat-box'>
+						<div className='member-list'>
+							<Grid container justifyContent='flex-end'>
+								<IconButton>
+									<AccountCircleIcon />
+								</IconButton>
+								<IconButton
+									aria-controls={
+										open
+											? 'demo-positioned-menu'
+											: undefined
+									}
+									aria-haspopup='true'
+									aria-expanded={open ? 'true' : undefined}
+									onClick={handleClick}
+								>
+									<MoreVertIcon />
+								</IconButton>
+								<Menu
+									anchorEl={anchorEl}
+									open={open}
+									onClose={handleClose}
+								>
+									<MenuItem onClick={openCreateGroupDialog}>
+										Create Group
+									</MenuItem>
+									<MenuItem onClick={openFriendDialog}>
+										Add Friend
+									</MenuItem>
+									<MenuItem onClick={handleClose}>
+										Logout
+									</MenuItem>
+								</Menu>
+							</Grid>
 
-						<AddFriendsDialog
-							open={addFriendsDialogOpen}
-							onClose={closeFriendDialog}
-							handleAlert={handleAlert}
-							currentUser={userData.username}
-						/>
+							<AddFriendsDialog
+								open={addFriendsDialogOpen}
+								onClose={closeFriendDialog}
+								handleAlert={handleAlert}
+								currentUser={userData.username}
+							/>
 
-						<Snackbar
-							open={showAddFriendAlert}
-							autoHideDuration={4000}
-							onClose={handleCloseAlert}
-							anchorOrigin={{
-								vertical: 'top',
-								horizontal: 'center',
-							}}
-						>
-							<Alert
+							<Snackbar
+								open={showAddFriendAlert}
+								autoHideDuration={4000}
 								onClose={handleCloseAlert}
-								severity={alert.color}
-								sx={{ width: '100%' }}
-							>
-								{alert.message}
-							</Alert>
-						</Snackbar>
-
-						<CreateGroupDialog
-							open={createGroupDialogOpen}
-							friendsList={friendsList}
-							onClose={closeCreateGroupDialog}
-							handleAlert={handleGroupAlert}
-						/>
-
-						<Snackbar
-							open={showCreateGroupAlert}
-							autoHideDuration={4000}
-							onClose={handleCloseAlert}
-							anchorOrigin={{
-								vertical: 'top',
-								horizontal: 'center',
-							}}
-						>
-							<Alert
-								onClose={handleCloseAlert}
-								severity={alert.color}
-								sx={{ width: '100%' }}
-							>
-								{alert.message}
-							</Alert>
-						</Snackbar>
-
-						<List style={{display:"flex", flexDirection: "column"}}>
-							<Button
-								onClick={() => {
-									setTab('CHATROOM');
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'center',
 								}}
 							>
-								Chatroom
-							</Button>
-							{[...privateChats.keys()].map((name, index) => (
-								<Button color="secondary"
-									onClick={() => {
-										setTab(name);
-									}}
-									key={index}
+								<Alert
+									onClose={handleCloseAlert}
+									severity={alert.color}
+									sx={{ width: '100%' }}
 								>
-									{name}
-								</Button>
-							))}
-						</List>
-					</div>
-					{tab === 'CHATROOM' && (
-						<div className='chat-content'>
-							<ul
-								className='chat-messages'
-								style={{ overflowY: 'scroll' }}
+									{alert.message}
+								</Alert>
+							</Snackbar>
+
+							<CreateGroupDialog
+								open={createGroupDialogOpen}
+								friendsList={friendsList}
+								onClose={closeCreateGroupDialog}
+								handleAlert={handleGroupAlert}
+								currentUser={userData.username}
+							/>
+
+							<Snackbar
+								open={showCreateGroupAlert}
+								autoHideDuration={4000}
+								onClose={handleCloseAlert}
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'center',
+								}}
 							>
-								{publicChats.map((chat, index) => (
-									<li
-										className={`message ${
-											chat.senderName ===
-												userData.username && 'self'
-										}`}
+								<Alert
+									onClose={handleCloseAlert}
+									severity={alert.color}
+									sx={{ width: '100%' }}
+								>
+									{alert.message}
+								</Alert>
+							</Snackbar>
+
+							<List
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+								}}
+							>
+								<Button
+									onClick={() => {
+										setTab('CHATROOM');
+									}}
+								>
+									Chatroom
+								</Button>
+								{[...privateChats.keys()].map((name, index) => (
+									<Button
+										color='secondary'
+										onClick={() => {
+											setTab(name);
+										}}
 										key={index}
 									>
-										{chat.senderName !==
-											userData.username && (
-											<Chip color="secondary" label={chat.senderName}/>
-										)} 
-										{chat.senderName == userData.username ? 
-										<>
-											<div className="message-date">
-												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
-											</div>
-											<div className='message-data'>
-												{chat.message}
-											</div>
-											</> : <>
-											<div className='message-data'>
-												{chat.message}
-											</div>
-											<div className="message-date">
-												<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
-											</div> 
-										</> 
-										}
-										{chat.senderName ===
-											userData.username && (
-											<Chip color="primary" label={chat.senderName}/>
-										)}
-									</li>
+										{name}
+									</Button>
 								))}
-							</ul>
-
-							<Box className='send-message' display="flex" justifyContent="space-between">
-							<Input type='text' placeholder="Enter your Message" value={userData.message} onChange={handleMessage} sx={{width: 8/10 }}/>
-								<Button
-									type='button'
-									className='send-button'
-									onClick={sendValue}
-									variant="contained"
-								>
-									Send
-								</Button>
-							</Box>
+							</List>
 						</div>
-					)}
-					{tab !== 'CHATROOM' && (
-						<div className='chat-content'>
-							<ul
-								className='chat-messages'
-								style={{ overflowY: 'scroll' }}
-							>
-								{[...privateChats.get(tab)].map(
-									(chat, index) => (
+						{tab === 'CHATROOM' && (
+							<div className='chat-content'>
+								<ul
+									className='chat-messages'
+									style={{ overflowY: 'scroll' }}
+								>
+									{publicChats.map((chat, index) => (
 										<li
 											className={`message ${
 												chat.senderName ===
@@ -398,56 +379,199 @@ const ChatRoom = () => {
 										>
 											{chat.senderName !==
 												userData.username && (
-												<Chip color="secondary" label={chat.senderName}/>
+												<Chip
+													color='secondary'
+													label={chat.senderName}
+												/>
 											)}
-											{chat.senderName == userData.username ? 
+											{chat.senderName ==
+											userData.username ? (
 												<>
-													<div className="message-date">
-														<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
+													<div className='message-date'>
+														<Typography
+															sx={{
+																fontSize: 11,
+															}}
+														>
+															{chat.date}
+														</Typography>
 													</div>
 													<div className='message-data'>
 														{chat.message}
 													</div>
-													</> : <>
+												</>
+											) : (
+												<>
 													<div className='message-data'>
 														{chat.message}
 													</div>
-													<div className="message-date">
-														<Typography sx = {{fontSize: 11}}>{chat.date}</Typography>
-													</div> 
-												</> 
-											}
+													<div className='message-date'>
+														<Typography
+															sx={{
+																fontSize: 11,
+															}}
+														>
+															{chat.date}
+														</Typography>
+													</div>
+												</>
+											)}
 											{chat.senderName ===
 												userData.username && (
-												<Chip color="primary" label={chat.senderName}/>
+												<Chip
+													color='primary'
+													label={chat.senderName}
+												/>
 											)}
 										</li>
-									)
-								)}
-							</ul>
+									))}
+								</ul>
 
-							<Box className='send-message' display="flex" justifyContent="space-between">
-								<Input type='text' placeholder="Enter your Message" value={userData.message} onChange={handleMessage} sx={{width: 8/10}}/>
-								<Button
-									className='send-button'
-									onClick={sendPrivateValue}
-									variant="contained"
+								<Box
+									className='send-message'
+									display='flex'
+									justifyContent='space-between'
 								>
-									Send
-								</Button>
-							</Box>
-						</div>
-					)}
-				</div>
-			) : (
-				<Box justifyContent="center" margin="auto">
-          <Box display="flex" flexDirection={"column"} alignItems="center" justifyContent={"center"} margin="auto" marginTop={10}>
-              <TextField margin="normal" id="name" label="Name" variant="standard" name="name" required value={userData.username} onChange={handleUsername}/>
-              <Button sx={{marginTop:4}} variant="contained" onClick={registerUser}> Login </Button> 
-          </Box>
-				</Box>
-			)}
-		</div>
+									<Input
+										type='text'
+										placeholder='Enter your Message'
+										value={userData.message}
+										onChange={handleMessage}
+										sx={{ width: 8 / 10 }}
+									/>
+									<Button
+										type='button'
+										className='send-button'
+										onClick={sendValue}
+										variant='contained'
+									>
+										Send
+									</Button>
+								</Box>
+							</div>
+						)}
+						{tab !== 'CHATROOM' && (
+							<div className='chat-content'>
+								<ul
+									className='chat-messages'
+									style={{ overflowY: 'scroll' }}
+								>
+									{[...privateChats.get(tab)].map(
+										(chat, index) => (
+											<li
+												className={`message ${
+													chat.senderName ===
+														userData.username &&
+													'self'
+												}`}
+												key={index}
+											>
+												{chat.senderName !==
+													userData.username && (
+													<Chip
+														color='secondary'
+														label={chat.senderName}
+													/>
+												)}
+												{chat.senderName ==
+												userData.username ? (
+													<>
+														<div className='message-date'>
+															<Typography
+																sx={{
+																	fontSize: 11,
+																}}
+															>
+																{chat.date}
+															</Typography>
+														</div>
+														<div className='message-data'>
+															{chat.message}
+														</div>
+													</>
+												) : (
+													<>
+														<div className='message-data'>
+															{chat.message}
+														</div>
+														<div className='message-date'>
+															<Typography
+																sx={{
+																	fontSize: 11,
+																}}
+															>
+																{chat.date}
+															</Typography>
+														</div>
+													</>
+												)}
+												{chat.senderName ===
+													userData.username && (
+													<Chip
+														color='primary'
+														label={chat.senderName}
+													/>
+												)}
+											</li>
+										)
+									)}
+								</ul>
+
+								<Box
+									className='send-message'
+									display='flex'
+									justifyContent='space-between'
+								>
+									<Input
+										type='text'
+										placeholder='Enter your Message'
+										value={userData.message}
+										onChange={handleMessage}
+										sx={{ width: 8 / 10 }}
+									/>
+									<Button
+										className='send-button'
+										onClick={sendPrivateValue}
+										variant='contained'
+									>
+										Send
+									</Button>
+								</Box>
+							</div>
+						)}
+					</div>
+				) : (
+					<Box justifyContent='center' margin='auto'>
+						<Box
+							display='flex'
+							flexDirection={'column'}
+							alignItems='center'
+							justifyContent={'center'}
+							margin='auto'
+							marginTop={10}
+						>
+							<TextField
+								margin='normal'
+								id='name'
+								label='Name'
+								variant='standard'
+								name='name'
+								required
+								value={userData.username}
+								onChange={handleUsername}
+							/>
+							<Button
+								sx={{ marginTop: 4 }}
+								variant='contained'
+								onClick={registerUser}
+							>
+								{' '}
+								Login{' '}
+							</Button>
+						</Box>
+					</Box>
+				)}
+			</div>
 		</div>
 	);
 };

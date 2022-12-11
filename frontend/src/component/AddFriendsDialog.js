@@ -35,12 +35,13 @@ const AddFriendsDialog = (props) => {
 	const handleAddFriend = () => {
 		let success;
 		axios
-			.post(`https://localhost:8080/chat/add_friend`, {
-				user1: currentUser,
-				user2: username,
-			})
+			.post(
+				`https://localhost:8080/friend/add/${currentUser}/${username}`
+			)
 			.then((res) => {
-				success = res.data;
+				console.log(res.data);
+				success = true;
+				// success = res.data;
 			});
 
 		let message;
