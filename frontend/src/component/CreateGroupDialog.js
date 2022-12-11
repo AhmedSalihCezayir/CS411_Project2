@@ -26,7 +26,7 @@ const CreateGroupDialog = (props) => {
 	useEffect(() => {
 		async function fetchFriends() {
 			const friendsList = await axios.get(
-				`friend/findAll/${currentUser}`
+				`http://localhost:8080/friend/findAll/${currentUser}`
 			);
 			setFriendsList(friendsList);
 		}
@@ -60,7 +60,7 @@ const CreateGroupDialog = (props) => {
 
 		axios
 			.post(
-				`https://localhost:8080/groupChat/add/createAll/${groupName}`,
+				`http://localhost:8080/groupChat/add/createAll/${groupName}`,
 				selectedFriends
 			)
 			.then((res) => {

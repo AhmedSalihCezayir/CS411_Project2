@@ -36,7 +36,7 @@ const AddFriendsDialog = (props) => {
 		let success;
 		axios
 			.post(
-				`https://localhost:8080/friend/add/${currentUser}/${username}`
+				`http://localhost:8080/friend/add/${currentUser}/${username}`
 			)
 			.then((res) => {
 				console.log(res.data);
