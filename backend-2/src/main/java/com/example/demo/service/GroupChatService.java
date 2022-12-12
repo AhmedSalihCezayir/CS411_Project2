@@ -10,4 +10,5 @@ public interface GroupChatService extends BaseCrudService<GroupChatDto>
 {
 	GroupChatDto create(GroupChatDto dto, String name);
 	GroupChatDto createFromList(List<UserDto> list, String name);
+	List<GroupChatDto> findAllGroupChats(String name);
 }
