@@ -68,4 +68,27 @@ public class GroupChatController extends BaseController<GroupChatDto>
 					HttpStatus.EXPECTATION_FAILED);
 		}
 	}
+
+	@GetMapping("findAll/{name}")
+	public ResponseEntity<RestResponse<List<GroupChatDto>>> create(@PathVariable String name)
+	{
+		try
+		{
+			return new ResponseEntity<>(
+					new RestResponse<>(groupChatService.findAllGroupChats(name), "Create", "Creating Friend Relation was successful."),
+					HttpStatus.OK
+			);
+		}
+		catch (EntityNotFoundException e)
+		{
+			return new ResponseEntity<>(new RestResponse<>(null, "Create",
+					"Creating Friend Relation was successful."),
+					HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		catch (Exception e)
+		{
+			return new ResponseEntity<>(new RestResponse<>(null, "Create", "There was an unexpected error."),
+					HttpStatus.EXPECTATION_FAILED);
+		}
+	}
 }

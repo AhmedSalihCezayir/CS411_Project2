@@ -1,9 +1,11 @@
 package com.example.demo.serviceimpl;
 
+import com.example.demo.db.Friend;
 import com.example.demo.db.GroupChat;
 import com.example.demo.db.GroupChatUsers;
 import com.example.demo.db.User;
 import com.example.demo.dto.GroupChatDto;
+import com.example.demo.dto.GroupChatUsersDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.repository.GroupChatRepository;
 import com.example.demo.repository.GroupChatUsersRepository;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,6 +51,17 @@ public class GroupChatServiceImpl extends BaseServiceImpl<GroupChat, GroupChatDt
 			groupChatUsersRepository.save(groupChatUsers);
 		}
 		return groupChatMapper.INSTANCE.entityToDto(groupChat);
+	}
+
+	@Override
+	public List<GroupChatDto> findAllGroupChats(String name)
+	{
+		List<GroupChatUsers> list = groupChatUsersRepository.findAllByUser_Name(name);
+		List<GroupChat> result = new ArrayList<>();
+		for (GroupChatUsers groupChatUsers : list) {
+			result.add(groupChatUsers.getGroupChat());
+		}
+		return groupChatMapper.INSTANCE.entityListToDtoList(result);
 	}
 
 	@Override
