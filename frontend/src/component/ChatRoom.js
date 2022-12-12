@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import Register from './Register';
 import Logo from '../icons/logo.png';
+import axios from 'axios';
 
 var stompClient = null;
 
@@ -192,7 +193,12 @@ const ChatRoom = () => {
 		setUserData({ ...userData, username: value });
 	};
 
-	const registerUser = () => {
+	const registerUser = async () => {
+		await axios.post(`http://localhost:8080/user/create`, {
+			name: userData.username,
+		});
+
+		setFriendsList(friendsList.data);
 		connect();
 	};
 

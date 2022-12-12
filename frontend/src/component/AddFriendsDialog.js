@@ -32,18 +32,14 @@ const AddFriendsDialog = (props) => {
 		setUsername(value);
 	};
 
-	const handleAddFriend = () => {
-		let success;
-		axios
-			.post(
-				`http://localhost:8080/friend/add/${currentUser}/${username}`
-			)
-			.then((res) => {
-				console.log(res.data);
-				success = true;
-				// success = res.data;
-			});
+	const handleAddFriend = async () => {
+		const result = await axios.post(
+			`http://localhost:8080/friend/add/${currentUser}/${username}`
+		);
 
+		const success =
+			result.data.message === 'Creating Friend Relation was successful.';
+		console.log(success);
 		let message;
 		let color;
 

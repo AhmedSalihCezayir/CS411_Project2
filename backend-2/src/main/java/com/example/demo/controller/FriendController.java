@@ -36,7 +36,7 @@ public class FriendController extends BaseController<FriendDto>
 		catch (EntityNotFoundException e)
 		{
 			return new ResponseEntity<>(new RestResponse<>(null, "Create",
-					"Creating Friend Relation was successful."),
+					"Creating Friend Relation was not successful."),
 					HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 		catch (Exception e)

@@ -28,11 +28,14 @@ const CreateGroupDialog = (props) => {
 			const friendsList = await axios.get(
 				`http://localhost:8080/friend/findAll/${currentUser}`
 			);
-			setFriendsList(friendsList);
+			const friendsListNameArray = friendsList.data.data.map(
+				(el) => el.name
+			);
+			setFriendsList(friendsListNameArray);
 		}
 
 		fetchFriends();
-	});
+	}, [props.open]);
 
 	const handleClose = () => {
 		onClose();
@@ -50,24 +53,23 @@ const CreateGroupDialog = (props) => {
 		setSelected(newSelected);
 	};
 
-	const handleCreateGroup = () => {
-		let success;
-		const selectedFriends = selected.filter((i) => {
+	const handleCreateGroup = async () => {
+		const selectedFriends = selected.map((i) => {
 			return {
 				name: friendsList[i],
 			};
 		});
 
-		axios
-			.post(
-				`http://localhost:8080/groupChat/add/createAll/${groupName}`,
-				selectedFriends
-			)
-			.then((res) => {
-				console.log(res.data);
-				success = true;
-				// success = res.data;
-			});
+		selectedFriends.push({ name: currentUser });
+
+		const result = await axios.post(
+			`http://localhost:8080/groupChat/createAll/${groupName}`,
+			selectedFriends
+		);
+
+		const success =
+			result.data.message === 'Creating Group Chat was successful.';
+
 		let message;
 		let color;
 
