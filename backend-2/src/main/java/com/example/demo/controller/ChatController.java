@@ -27,7 +27,7 @@ public class ChatController {
         return message;
     }
 
-    @MessageMapping("/hello")
+    @MessageMapping("/group-message")
     public GroupMessage greeting(@Payload GroupMessage message){
         simpMessagingTemplate.convertAndSendToUser(message.getGroupName(), "/queue/reply", message);
         return message;

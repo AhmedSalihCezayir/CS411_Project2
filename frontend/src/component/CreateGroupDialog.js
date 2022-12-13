@@ -60,6 +60,10 @@ const CreateGroupDialog = (props) => {
 			};
 		});
 
+		const selectedFriendsName = selected.map((i) => {
+			return friendsList[i];
+		});
+
 		selectedFriends.push({ name: currentUser });
 
 		const result = await axios.post(
@@ -81,10 +85,13 @@ const CreateGroupDialog = (props) => {
 			color = 'error';
 		}
 
-		handleAlert({
-			message,
-			color,
-		});
+		handleAlert(
+			{
+				message,
+				color,
+			},
+			selectedFriendsName
+		);
 		setGroupName('');
 		setSelected([]);
 		onClose();

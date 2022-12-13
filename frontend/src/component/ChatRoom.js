@@ -36,6 +36,7 @@ const ChatRoom = () => {
 	// Each key hold username, each value hold list of messages
 	// which are sent by particular user
 	const [privateChats, setPrivateChats] = useState(new Map());
+	const [groupChats, setGroupChats] = useState(new Map());
 	const [publicChats, setPublicChats] = useState([]);
 	const [tab, setTab] = useState('CHATROOM');
 	// Hold data about if we are connected, message and user
@@ -119,6 +120,20 @@ const ChatRoom = () => {
 		}
 	};
 
+	const onGroupMessage = (payload) => {
+		console.log(payload);
+		var payloadData = JSON.parse(payload.body);
+		if (groupChats.get(payloadData.senderName)) {
+			groupChats.get(payloadData.senderName).push(payloadData);
+			setGroupChats(new Map(groupChats));
+		} else {
+			let list = [];
+			list.push(payloadData);
+			groupChats.set(payloadData.senderName, list);
+			setGroupChats(new Map(groupChats));
+		}
+	};
+
 	const onError = (err) => {
 		console.log(err);
 	};
@@ -161,6 +176,29 @@ const ChatRoom = () => {
 			};
 			console.log(chatMessage);
 			stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+			setUserData({ ...userData, message: '', messageDate: '' });
+		}
+	};
+
+	const sendGroupValue = () => {
+		if (stompClient) {
+			var chatMessage = {
+				senderName: userData.username,
+				groupName: tab,
+				message: userData.message,
+				date: userData.messageDate,
+				status: 'MESSAGE',
+			};
+
+			if (userData.username !== tab) {
+				groupChats.get(tab).push(chatMessage);
+				setGroupChats(new Map(groupChats));
+			}
+			stompClient.send(
+				'/app/group-message',
+				{},
+				JSON.stringify(chatMessage)
+			);
 			setUserData({ ...userData, message: '', messageDate: '' });
 		}
 	};
@@ -240,9 +278,16 @@ const ChatRoom = () => {
 		setCreateGroupDialogOpen(false);
 	};
 
-	const handleGroupAlert = (alert) => {
+	const handleGroupAlert = (alert, participantsList) => {
 		setAlert({ message: alert.message, color: alert.color });
 		setShowCreateGroupAlert(true);
+
+		participantsList.foreach((user) => {
+			stompClient.subscribe(
+				'/user/' + user + '/queue/reply',
+				onGroupMessage
+			);
+		});
 	};
 
 	const logoSize = {
@@ -537,7 +582,7 @@ const ChatRoom = () => {
 									/>
 									<Button
 										className='send-button'
-										onClick={sendPrivateValue}
+										onClick={sendGroupValue}
 										variant='contained'
 									>
 										Send
