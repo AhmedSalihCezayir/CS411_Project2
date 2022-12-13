@@ -53,18 +53,32 @@ const ChatRoom = () => {
 		message: '',
 		color: '',
 	});
-	const [friendsList, setFriendsList] = useState([
-		'Ahmed Salih Cezayir',
-		'İsmail Sergen Göçmen',
-		'Akın Kutlu',
-		'Mert Barkın Er',
-	]);
 	const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
 	const [showCreateGroupAlert, setShowCreateGroupAlert] = useState(false);
+	const [personalGroups, setPersonalGroups] = useState([]);
 
 	useEffect(() => {
-		console.log(userData);
-	}, [userData]);
+		async function getGroups(username) {
+			const response = await axios.get(
+				`http://localhost:8080/groupChat/findAll/${username}`
+			);
+
+			const groupNames = response.data.data.map((el) => el.name);
+			setPersonalGroups(groupNames);
+
+			const responseFriend = await axios.get(
+				`http://localhost:8080/friend/findAll/${username}`
+			);
+
+			responseFriend.data.data.forEach((element) => {
+				privateChats.set(element.name, []);
+				setPrivateChats(new Map(privateChats));
+			});
+		}
+
+		getGroups(userData.username);
+		// setPersonalGroups();
+	}, [alert]);
 
 	const connect = () => {
 		let Sock = new SockJS('http://localhost:8080/ws');
@@ -94,10 +108,10 @@ const ChatRoom = () => {
 		var payloadData = JSON.parse(payload.body);
 		switch (payloadData.status) {
 			case 'JOIN':
-				if (!privateChats.get(payloadData.senderName)) {
-					privateChats.set(payloadData.senderName, []);
-					setPrivateChats(new Map(privateChats));
-				}
+				// if (!privateChats.get(payloadData.senderName)) {
+				// 	privateChats.set(payloadData.senderName, []);
+				// 	setPrivateChats(new Map(privateChats));
+				// }
 				break;
 			case 'MESSAGE':
 				publicChats.push(payloadData);
@@ -236,7 +250,6 @@ const ChatRoom = () => {
 			name: userData.username,
 		});
 
-		setFriendsList(friendsList.data);
 		connect();
 	};
 
@@ -364,7 +377,6 @@ const ChatRoom = () => {
 
 							<CreateGroupDialog
 								open={createGroupDialogOpen}
-								friendsList={friendsList}
 								onClose={closeCreateGroupDialog}
 								handleAlert={handleGroupAlert}
 								currentUser={userData.username}
