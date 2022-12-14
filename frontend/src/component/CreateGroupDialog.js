@@ -65,6 +65,7 @@ const CreateGroupDialog = (props) => {
 		});
 
 		selectedFriends.push({ name: currentUser });
+		selectedFriendsName.push(currentUser);
 
 		const result = await axios.post(
 			`http://localhost:8080/groupChat/createAll/${groupName}`,

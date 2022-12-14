@@ -55,7 +55,6 @@ const ChatRoom = () => {
 	});
 	const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
 	const [showCreateGroupAlert, setShowCreateGroupAlert] = useState(false);
-	const [personalGroups, setPersonalGroups] = useState([]);
 
 	useEffect(() => {
 		async function getGroups(username) {
@@ -64,7 +63,11 @@ const ChatRoom = () => {
 			);
 
 			const groupNames = response.data.data.map((el) => el.name);
-			setPersonalGroups(groupNames);
+			groupNames.forEach((groupName) => {
+				groupChats.set(groupName, []);
+				setGroupChats(new Map(groupChats));
+			});
+			// setGroupChats(groupNames);
 
 			const responseFriend = await axios.get(
 				`http://localhost:8080/friend/findAll/${username}`
@@ -77,8 +80,7 @@ const ChatRoom = () => {
 		}
 
 		getGroups(userData.username);
-		// setPersonalGroups();
-	}, [alert]);
+	}, [alert, showCreateGroupAlert]);
 
 	const connect = () => {
 		let Sock = new SockJS('http://localhost:8080/ws');
@@ -295,7 +297,7 @@ const ChatRoom = () => {
 		setAlert({ message: alert.message, color: alert.color });
 		setShowCreateGroupAlert(true);
 
-		participantsList.foreach((user) => {
+		participantsList.forEach((user) => {
 			stompClient.subscribe(
 				'/user/' + user + '/queue/reply',
 				onGroupMessage
@@ -413,7 +415,10 @@ const ChatRoom = () => {
 								>
 									Chatroom
 								</Button>
-								{[...privateChats.keys()].map((name, index) => (
+								{[
+									...privateChats.keys(),
+									...groupChats.keys(),
+								].map((name, index) => (
 									<Button
 										color='secondary'
 										onClick={() => {
@@ -519,7 +524,7 @@ const ChatRoom = () => {
 									className='chat-messages'
 									style={{ overflowY: 'scroll' }}
 								>
-									{[...privateChats.get(tab)].map(
+									{[new Map([...groupChats]).get(tab)].map(
 										(chat, index) => (
 											<li
 												className={`message ${
