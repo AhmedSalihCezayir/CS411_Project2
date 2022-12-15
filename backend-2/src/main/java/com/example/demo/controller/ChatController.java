@@ -32,4 +32,10 @@ public class ChatController {
         simpMessagingTemplate.convertAndSendToUser(message.getGroupName(), "/queue/reply", message);
         return message;
     }
+
+    @MessageMapping("/room/greeting")
+    public GroupMessage greet(GroupMessage message) {
+        simpMessagingTemplate.convertAndSend("/topic/room/"+message.getGroupName(), message);
+        return message;
+    }
 }
