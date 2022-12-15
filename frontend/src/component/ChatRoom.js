@@ -211,11 +211,12 @@ const ChatRoom = () => {
 				setGroupChats(new Map(groupChats));
 			}
 			stompClient.send(
-				'/app/group-message',
+				'/app/room/greeting',
 				{},
 				JSON.stringify(chatMessage)
 			);
 			setUserData({ ...userData, message: '', messageDate: '' });
+			console.log(new Map([...groupChats]).get(tab));
 		}
 	};
 
@@ -297,12 +298,7 @@ const ChatRoom = () => {
 		setAlert({ message: alert.message, color: alert.color });
 		setShowCreateGroupAlert(true);
 
-		participantsList.forEach((user) => {
-			stompClient.subscribe(
-				'/user/' + user + '/queue/reply',
-				onGroupMessage
-			);
-		});
+		stompClient.subscribe(`/topic/room/abcde`, onGroupMessage);
 	};
 
 	const logoSize = {
@@ -524,7 +520,7 @@ const ChatRoom = () => {
 									className='chat-messages'
 									style={{ overflowY: 'scroll' }}
 								>
-									{[new Map([...groupChats]).get(tab)].map(
+									{[new Map(groupChats).get(tab)].map(
 										(chat, index) => (
 											<li
 												className={`message ${

@@ -27,9 +27,9 @@ public class ChatController {
         return message;
     }
 
-    @MessageMapping("/group-message")
-    public GroupMessage greeting(@Payload GroupMessage message){
-        simpMessagingTemplate.convertAndSendToUser(message.getGroupName(), "/queue/reply", message);
+    @MessageMapping("/room/greeting")
+    public GroupMessage greet(GroupMessage message) {
+        simpMessagingTemplate.convertAndSend("/topic/room/"+message.getGroupName(), message);
         return message;
     }
 }
