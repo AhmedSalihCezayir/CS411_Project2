@@ -55,6 +55,7 @@ const ChatRoom = () => {
 				`http://localhost:8080/friend/findAll/${username}`
 			);
 
+			setPrivateChats(new Map());
 			responseFriend.data.data.forEach((element) => {
 				privateChats.set(element.name, []);
 				setPrivateChats(new Map(privateChats));
@@ -62,7 +63,7 @@ const ChatRoom = () => {
 		}
 
 		initialize(userData.username);
-	}, [alert]);
+	}, [alert, userData.username]);
 
 	const connect = () => {
 		let Sock = new SockJS('http://localhost:8080/ws');
@@ -193,10 +194,13 @@ const ChatRoom = () => {
 	};
 
 	const registerUser = async () => {
-		await axios.post(`http://localhost:8080/user/create`, {
-			name: userData.username,
-		});
-
+		try {
+			await axios.post(`http://localhost:8080/user/create`, {
+				name: userData.username,
+			});
+		} catch (err) {
+			console.log(err);
+		}
 		connect();
 	};
 
