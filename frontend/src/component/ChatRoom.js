@@ -3,26 +3,22 @@ import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Grid from '@mui/material/Grid';
 import AddFriendsDialog from './AddFriendsDialog';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import CreateGroupDialog from './CreateGroupDialog';
+
 import {
 	Typography,
 	Button,
 	Input,
 	Box,
-	ListItem,
-	ListItemButton,
 	List,
 	TextField,
 	Chip,
 } from '@mui/material';
-import Register from './Register';
 import Logo from '../icons/logo.png';
 import axios from 'axios';
 
@@ -52,19 +48,9 @@ const ChatRoom = () => {
 		message: '',
 		color: '',
 	});
-	const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
-	const [showCreateGroupAlert, setShowCreateGroupAlert] = useState(false);
-	const [personalGroups, setPersonalGroups] = useState([]);
 
 	useEffect(() => {
-		async function getGroups(username) {
-			const response = await axios.get(
-				`http://localhost:8080/groupChat/findAll/${username}`
-			);
-
-			const groupNames = response.data.data.map((el) => el.name);
-			setPersonalGroups(groupNames);
-
+		async function initialize(username) {
 			const responseFriend = await axios.get(
 				`http://localhost:8080/friend/findAll/${username}`
 			);
@@ -75,8 +61,7 @@ const ChatRoom = () => {
 			});
 		}
 
-		getGroups(userData.username);
-		// setPersonalGroups();
+		initialize(userData.username);
 	}, [alert]);
 
 	const connect = () => {
@@ -241,21 +226,10 @@ const ChatRoom = () => {
 
 	const handleCloseAlert = () => {
 		setShowAddFriendAlert(false);
-		setShowCreateGroupAlert(false);
 	};
 
-	const openCreateGroupDialog = () => {
-		setAnchorEl(false);
-		setCreateGroupDialogOpen(true);
-	};
-
-	const closeCreateGroupDialog = () => {
-		setCreateGroupDialogOpen(false);
-	};
-
-	const handleGroupAlert = (alert) => {
-		setAlert({ message: alert.message, color: alert.color });
-		setShowCreateGroupAlert(true);
+	const handleLogout = () => {
+		setUserData({ ...userData, username: '', connected: false });
 	};
 
 	const logoSize = {
@@ -273,9 +247,6 @@ const ChatRoom = () => {
 					<div className='chat-box'>
 						<div className='member-list'>
 							<Grid container justifyContent='flex-end'>
-								<IconButton>
-									<AccountCircleIcon />
-								</IconButton>
 								<IconButton
 									aria-controls={
 										open
@@ -293,13 +264,10 @@ const ChatRoom = () => {
 									open={open}
 									onClose={handleClose}
 								>
-									<MenuItem onClick={openCreateGroupDialog}>
-										Create Group
-									</MenuItem>
 									<MenuItem onClick={openFriendDialog}>
 										Add Friend
 									</MenuItem>
-									<MenuItem onClick={handleClose}>
+									<MenuItem onClick={handleLogout}>
 										Logout
 									</MenuItem>
 								</Menu>
@@ -314,31 +282,6 @@ const ChatRoom = () => {
 
 							<Snackbar
 								open={showAddFriendAlert}
-								autoHideDuration={4000}
-								onClose={handleCloseAlert}
-								anchorOrigin={{
-									vertical: 'top',
-									horizontal: 'center',
-								}}
-							>
-								<Alert
-									onClose={handleCloseAlert}
-									severity={alert.color}
-									sx={{ width: '100%' }}
-								>
-									{alert.message}
-								</Alert>
-							</Snackbar>
-
-							<CreateGroupDialog
-								open={createGroupDialogOpen}
-								onClose={closeCreateGroupDialog}
-								handleAlert={handleGroupAlert}
-								currentUser={userData.username}
-							/>
-
-							<Snackbar
-								open={showCreateGroupAlert}
 								autoHideDuration={4000}
 								onClose={handleCloseAlert}
 								anchorOrigin={{
